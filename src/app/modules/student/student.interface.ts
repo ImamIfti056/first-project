@@ -1,27 +1,35 @@
+import { Model } from "mongoose";
+
 // 1. Create an interface representing a document in MongoDB.
-export type Guardian = {
+export type TGuardian = {
   fatherName: string;
   fatherContactNo: string;
   motherName: string;
   motherContactNo: string;
 };
 
-export type UserName = {
+export type TUserName = {
   firstName: string;
   middleName: string;
   lastName: string;
 };
 
-export type Student = {
+export type TStudent = {
   id: string;
-  name: UserName;
+  name: TUserName;
   email: string;
   gender: 'male' | 'female';
   dateOfBirth?: string;
-  contactNo: string;
+  contactNo?: string;
   bloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-';
-  presentAddress: string;
-  guardian: Guardian;
+  presentAddress?: string;
+  guardian: TGuardian;
   profileImg?: string;
   isActive: 'active' | 'blocked';
 };
+
+export type StudentMethods = {
+  doesUserExist(id: string): Promise<TStudent | null>
+}
+
+export type StudentModel = Model<TStudent, Record<string, never>, StudentMethods>;
