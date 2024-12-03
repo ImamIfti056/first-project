@@ -36,28 +36,27 @@ const guardianValidationSchema = z.object({
 });
 
 // Main Student schema
-const studentValidationSchema = z.object({
-  id: z.string().nonempty('ID is required.'),
-  password: z.string().nonempty('password is required.'),
-  name: userNameValidationSchema,
-  gender: z.enum(['male', 'female'], {
-    errorMap: () => ({ message: "Gender must be 'male' or 'female'." }),
-  }),
-  isActive: z
-    .enum(['active', 'blocked'], {
-      errorMap: () => ({ message: "Status must be 'active' or 'blocked'." }),
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().nonempty('password is required.'),
+    student: z.object({
+      name: userNameValidationSchema,
+    gender: z.enum(['male', 'female'], {
+      errorMap: () => ({ message: "Gender must be 'male' or 'female'." }),
+    }),
+    bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], {
+      errorMap: () => ({ message: '{VALUE} is not a valid blood group.' }),
+    }),
+    email: z.string().email('Email is not valid.').nonempty('Email is required.'),
+    dateOfBirth: z.string().optional(),
+    contactNo: z.string().optional(),
+    presentAddress: z.string().optional(),
+    profileImg: z.string().optional(),
+    guardian: guardianValidationSchema,
     })
-    .default('active'),
-  bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], {
-    errorMap: () => ({ message: '{VALUE} is not a valid blood group.' }),
-  }),
-  email: z.string().email('Email is not valid.').nonempty('Email is required.'),
-  dateOfBirth: z.string().optional(),
-  contactNo: z.string().optional(),
-  presentAddress: z.string().optional(),
-  profileImg: z.string().optional(),
-  guardian: guardianValidationSchema,
-  isDeleted: z.boolean().default(false).optional(),
-});
+  })
+})
 
-export default studentValidationSchema;
+export const studentValidations= {
+  createStudentValidationSchema,
+};

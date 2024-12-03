@@ -106,10 +106,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: gurdianSchema,
       required: true,
     },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     toJSON: {

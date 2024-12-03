@@ -1,19 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
 import { userServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
+import catchAsync from '../../utils/catchAsync';
 
-const createStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const createStudent = catchAsync(async (req, res, next) => {
     const { password, student: studentData } = req.body;
     //data validation using Joi
     // const {error, value} = studentValidationSchema.validate(studentData)
 
-    //validation using zod
-    //   const zodParsedData = UserValidation.userValidationSchema.parse(studentData);
+    
 
     const result = await userServices.createStudentIntoDB(
       password,
@@ -26,10 +20,7 @@ const createStudent = async (
       data: result,
       message: 'Student is created successfully',
     });
-  } catch (err: any) {
-    next(err);
-  }
-};
+})
 
 export const userControllers = {
   createStudent,
