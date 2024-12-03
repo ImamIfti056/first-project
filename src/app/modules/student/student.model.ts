@@ -1,13 +1,11 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
 import {
   TGuardian,
   TStudent,
   StudentModel,
   TUserName,
 } from './student.interface';
-import config from '../../config';
 
 // 2. Create a Schema corresponding to the document interface.
 const userNameSchema = new Schema<TUserName>({
@@ -70,7 +68,12 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: userNameSchema,
       required: [true, 'name is required'],
     },
-    password: { type: String, required: [true, 'Password is required'] },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'name is required'],
+      unique: true,
+      ref: 'User',
+    },
     gender: {
       type: String,
       enum: {
@@ -78,11 +81,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
         message: 'Gender can only be Male or Female',
       },
       required: true,
-    },
-    isActive: {
-      type: String,
-      enum: ['active', 'blocked'],
-      default: 'active',
     },
     bloodGroup: {
       type: String,
@@ -127,23 +125,6 @@ studentSchema.virtual('fullName').get(function () {
   );
 });
 
-//pre save middleware will work on create() method
-studentSchema.pre('save', async function (next) {
-  //hashing pass
-  const user = this; //current processing doc
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-//post save middleware
-studentSchema.post('save', function (savedDoc, next) {
-  savedDoc.password = '';
-  next();
-});
-
 //query middleware
 studentSchema.pre('find', function (next) {
   // console.log(this)
@@ -160,11 +141,6 @@ studentSchema.statics.doesUserExist = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
 };
-
-// studentSchema.methods.doesUserExist = async function (id: string){
-//   const existingUser = await Student.findOne({id});
-//   return existingUser;
-// }
 
 // 3. Create a Model.
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
