@@ -9,14 +9,18 @@ const getStudents = async (req: Request, res: Response, next: NextFunction) => {
       success: true,
       statusCode: 200,
       data: result,
-      message: 'Student are retrieved successfully'
-    })
+      message: 'Student are retrieved successfully',
+    });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 
-const getSingleStudent = async (req: Request, res: Response, next: NextFunction) => {
+const getSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.params.studentId;
     const result = await studentServices.getSingleStudentFromDB(studentId);
@@ -24,14 +28,18 @@ const getSingleStudent = async (req: Request, res: Response, next: NextFunction)
       success: true,
       statusCode: 200,
       data: result,
-      message: 'Student is retrieved successfully'
-    })
+      message: 'Student is retrieved successfully',
+    });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 
-const deleteStudent = async (req: Request, res: Response, next: NextFunction) => {
+const deleteStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.params.studentId;
     const result = await studentServices.deleteStudentFromDB(studentId);
@@ -39,10 +47,10 @@ const deleteStudent = async (req: Request, res: Response, next: NextFunction) =>
       success: true,
       statusCode: 200,
       data: result,
-      message: 'Student deleted successfully'
-    })
+      message: 'Student deleted successfully',
+    });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 
